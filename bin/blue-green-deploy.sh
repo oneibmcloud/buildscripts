@@ -121,8 +121,10 @@ else
    IFS==',' read -a envvararray <<< "${ENVS}"
    for element in "${envvararray[@]}"
       do
-      IFS=':' read -a envvar <<< "$element"
-      $CF set-env ${BLUE_APP} ${envvar[0]} ${envvar[1]}
+        var="$(sed 's/:.*//' <<< "$element")"
+        value="$(sed 's/^[^:]*://' <<< "$element")"
+        echo "***** variable = ${var} and value = ${value} ******"
+        $CF set-env ${BLUE_APP} ${var} "${value}"
    done
 fi
 
@@ -200,9 +202,14 @@ if [ $? -eq 0 ]; then
    fi
 fi
 
-$CF rename ${GREEN_APP} ${GREEN_APP_BACKUP}
-if [ $? -ne 0 ]; then
-   notify_slack "${ERR_MESSAGE}" 8 ${FAILED} ${RED}&& exit 1
+# This is neecessary if for some reason the Green app has been deleted or has 
+# not been created year, eg the first time this script runs
+$CF app ${GREEN_APP}
+if [ $? -eq 0]; then
+   $CF rename ${GREEN_APP} ${GREEN_APP_BACKUP}
+   if [ $? -ne 0 ]; then
+      notify_slack "${ERR_MESSAGE}" 8.1 ${FAILED} ${RED}&& exit 1
+   fi
 fi
 
 #############
