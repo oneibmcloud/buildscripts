@@ -81,7 +81,14 @@ WIKI=${FAILURE_RECOVERY_WIKI:-"https://github.com/oneibmcloud/buildscripts"}
 
 # The location of the manifest needs to be set.
 if [ -z ${MANIFEST_FILE} ]; then
-   echo "Environment variable MANIFEST_FILE not set, set it to the path of the manifest file."
+   echo "Environment variable MANIFEST_FILE has not been set, set it to the path of the manifest file."
+   exit 1
+fi
+
+# The SLACK_WEBHOOK_PATH environment variable is expected to be set to report status. 
+# This script can be modify to use a different mechanism for reporting status.
+if [ -z ${SLACK_WEBHOOK_PATH} ]; then
+   echo "Environment variable SLACK_WEBHOOK_PATH has not been set, set it to the URL of the Slack web hook integration."
    exit 1
 fi
 
@@ -125,6 +132,9 @@ else
         value="$(sed 's/^[^:]*://' <<< "$element")"
         echo "***** variable = ${var} and value = ${value} ******"
         $CF set-env ${BLUE_APP} ${var} "${value}"
+        if [ $? -ne 0 ]; then
+           notify_slack "${ERR_MESSAGE}" 3 ${FAILED ${RED} && exit 1
+        fi
    done
 fi
 
@@ -146,7 +156,7 @@ for i in {1..3}; do
         echo "${APP_URL} notified successfully."
         break
     elif [ $i == 3 ]; then
-        notify_slack "${ERR_MESSAGE}i" 5 ${FAILED} ${RED} && exit 1
+        notify_slack "${ERR_MESSAGE}" 5 ${FAILED} ${RED} && exit 1
     else
         echo "${APP_URL} notification failed. Code $CURL_EXIT. Retrying..."
         sleep 2
@@ -159,7 +169,7 @@ done
 #############
 $CF map-route ${BLUE_APP} ${DOMAIN} -n ${CF_APP}
 if [ $? -ne 0 ]; then
-   notify_slack "${ERR_MESSAGE}" 6 ${FAILED} ${RED} && exit 1
+   notify_slack "${ERR_MESSAGE}" 6.1 ${FAILED} ${RED} && exit 1
 fi
 
 # Map additional routes
@@ -176,6 +186,9 @@ else
       else
          $CF map-route ${BLUE_APP} $element
       fi
+      if [ $? -ne 0 ]; then
+         notify_slack "${ERR_MESSAGE}" 6.2 ${FAILED} ${RED} && exit 1
+      fi
    done
 fi
 
@@ -189,6 +202,9 @@ if [ $? -ne 0 ]; then
    echo "Test route isn't mapped and didn't have to be removed"
 fi
 $CF delete-route $DOMAIN -n ${BLUE_APP} -f
+if [ $? -ne 0 ]; then
+   notify_slack "${ERR_MESSAGE}" 7 ${FAILED} ${RED} && exit 1
+fi
 
 #############
 # 8) Rename green to green-backup, thus preserving previous version.
@@ -198,7 +214,7 @@ if [ $? -eq 0 ]; then
    echo "${GREEN_APP_BACKUP} exists, removing it before creating a new backup"
    $CF delete ${GREEN_APP_BACKUP} -f
    if [ $? -ne 0 ]; then
-      notify_slack "${ERR_MESSAGE}" 8 ${FAILED} ${RED} && exit 1
+      notify_slack "${ERR_MESSAGE}" 8.1 ${FAILED} ${RED} && exit 1
    fi
 fi
 
@@ -208,7 +224,7 @@ $CF app ${GREEN_APP}
 if [ $? -eq 0]; then
    $CF rename ${GREEN_APP} ${GREEN_APP_BACKUP}
    if [ $? -ne 0 ]; then
-      notify_slack "${ERR_MESSAGE}" 8.1 ${FAILED} ${RED}&& exit 1
+      notify_slack "${ERR_MESSAGE}" 8.2 ${FAILED} ${RED}&& exit 1
    fi
 fi
 
