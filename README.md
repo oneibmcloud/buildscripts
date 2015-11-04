@@ -10,16 +10,20 @@ The script depends on some environment variables having been set. In some cases,
 These are:
 
 |  Variable             |  Default Value  | Comment            |
-|-----------------------|:---------------:|-------------------:|
+|-----------------------|:--------------- |:-------------------|
 | MANIFEST_FILE         | manifest.yml    | current directory  |
 | MY_DOMAIN             |                 | Bluemix domain name     |
 | SLACK_WEBHOOK_PATH    |                 | URL of Slack hook integration |
 | APP_PUSH_DIR          | (top level dir) | directory from where to run ```cf push```|
-| URL_PATH_PAGE         |                 | application's URL page page |
+| URL_PATH_PAGE         |                 | application's URL path page |
 
-There are other environment variables used to passed variable information for the application. These are:
+If set, the script also processes variables intended to be set for the application.
 
-* **ENVS**: application environment variables to be set, the value should be NAME1:VALUE1,NAME1:VALUE2
-* **ROUTES**: routes that should be mapped to the application. The value should take the from of host1:domain1,host2:domain2,domain3
-* **SERVICES**: TBD
-* **CF_PUSH_ARGS**:TBD
+|  Variable      |  Value                              |
+|----------------|:---------------|:-------------------|
+| ENVS           |application environment variables to be set, the value should be name1:value1,name2:value2 |
+| ROUTES         |routes that should be mapped to the application. The value should take the from of  host1:domain1,host2:domain2,domain3 |
+| SERVICES       |services that should be bound to the application, the value should take the form servicename1,servicename2                   |
+| CF_PUSH_ARGS | a string of arguments to use when ```cf push``` is called                    |
+
+
