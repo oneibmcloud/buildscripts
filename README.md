@@ -32,12 +32,12 @@ NOTES: Processing the SERVICES has not been implemented but it can be done very 
 
 ### Script Implementation
 
-The main purpose of the script is to deploy an application as gracefully as possible from Green to Blue, minimizing the downtime. The script accomplishes this by manipulating the routes. After the script has deployed Blue and verified that is up and responding, there is going to be a very small period of time while the old and new versions of the applications are running simultaneously; as Blue migrates to Green and Green gets renamed to the backup version.
+The main purpose of the script is to deploy an application as gracefully as possible from Green to Blue, minimizing the downtime. The script accomplishes this by manipulating the routes. After the script has deployed Blue and verified that is up and responding, there is going to be a very small period of time while the old and new instances of the applications are running simultaneously; as Blue migrates to Green and Green gets renamed to the backup version.
 
 If the script fails at any point, the Blue instance most likely has been pushed already and needs to be deleted before re-running the script. 
 
 ### Future Improvement
-There is room for improvment:
+There is room for improvement:
 
 * The script creates a back up of the old application. A script could be written to roll back in the event that the new application doesn not perform as expected. 
 
