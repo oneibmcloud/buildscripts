@@ -22,7 +22,7 @@ If environment variables and routes are defined for the application, they are de
 
 |  Variable      |  Value                              |
 |----------------|:---------------|:-------------------|
-| APP_EVNS       |ENV1,ENV2,ENV3,..| List of ENVs to process by the script, each ENV must be defined |
+| APP_EVNS       |ENV1,ENV2,ENV3... List of ENVs to be processed by the script, each ENV must be defined |
 | ROUTES         |routes that should be mapped to the application. The value should take the from of  host1:domain1,host2:domain2,domain3 |
 | SERVICES       |services that should be bound to the application, the value should take the form servicename1,servicename2                   |
 | CF_PUSH_ARGS | a string of arguments to use when ```cf push``` is called                    |
