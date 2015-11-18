@@ -30,10 +30,13 @@ If environment variables and routes are defined for the application, they are de
 
 NOTES: Processing the SERVICES has not been impleented but the code is exactly the same as processing the ROUTES.
 
-### SCRIPT IMPLEMENTATION
+### Script Implementation
 
 The main purpose of the script is to deploy an application as gracefully as possible from Green to Blue, minimizing the downtime. This is done by manipulating the routes. While the script is running there is going to be a short time while the old and new versions of the applications are running simultaneously, as blue migrates to green. 
 
-### FUTURE IMPROVEMENT
+### Future Improvement
+There is room for improvment:
 
-The script creates a back up of the old application. A script could be written to roll back in the event that the new application doesn not behave as expected. 
+* The script creates a back up of the old application. A script could be written to roll back in the event that the new application doesn not behave as expected. 
+
+* The messages posted to Slack could be formatted more nicely, for example using syntax highlighting.
