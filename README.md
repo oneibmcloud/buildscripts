@@ -36,7 +36,7 @@ The main purpose of the script is to deploy an application as gracefully as poss
 
 If the script fails at any point, the Blue instance most likely has been pushed already and needs to be deleted before re-running the script. 
 
-### Future Improvement
+### Future Improvements
 There is room for improvement:
 
 * The script creates a back up of the old application. A script could be written to roll back in the event that the new application doesn not perform as expected. 
