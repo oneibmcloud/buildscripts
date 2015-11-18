@@ -28,11 +28,13 @@ If environment variables and routes are defined for the application, they are de
 | CF_PUSH_ARGS | a string of arguments to use when ```cf push``` is called                    |
 
 
-NOTES: Processing the SERVICES has not been impleented but the code is exactly the same as processing the ROUTES.
+NOTES: Processing the SERVICES has not been implemented but it can be done very similarly to ROUTES.
 
 ### Script Implementation
 
 The main purpose of the script is to deploy an application as gracefully as possible from Green to Blue, minimizing the downtime. This is done by manipulating the routes. After the script has deployed Blue and as verified that is up and responding, there is going to be a very small period of time while the old and new versions of the applications are running simultaneously, as Blue migrates to Green and Green gets renamed to the backup version.
+
+If the script fails at any point, the Blue instance most likely has been pushed already and needs to be deleted before re-running the script. 
 
 ### Future Improvement
 There is room for improvment:
